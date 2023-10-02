@@ -1,0 +1,62 @@
+---
+title: "practice_3.2"
+author: "Papiya Bhattacharya"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+---
+
+##  Step 1: Create the initial data frame
+```
+library(dplyr)
+
+
+subject_names <- c("Subject1", "Subject2", "Subject3", "Subject4", "Subject5")
+initial_weight <- c(104,95,87,77,112)
+post_diet_weight <- c(96,91,81,75,118)
+
+bubble_diet_df <- data.frame(Subject = subject_names,
+                             Before_Diet = initial_weight,
+                             After_Diet = post_diet_weight)
+
+```
+
+## Step 2: Reformat the data frame
+
+```
+
+bubble_diet_df_reformatted <- bubble_diet_df %>%
+  pivot_longer(cols = -Subject, 
+               names_to = "Measurement_Time",
+               values_to = "Weight")
+```
+## Step 3: Calculate weight loss as a percentage
+```
+bubble_diet_df_reformatted <- bubble_diet_df_reformatted %>%
+  group_by(Subject) %>%
+  mutate(Weight_Loss = ((Weight - min(Weight)) / min(Weight)) * 100) %>%
+ungroup()
+```
+
+## Step 4: Create the list as specified
+```
+
+
+
+BUBBLE_DIET <- list(
+  Data_Frame = bubble_diet_df_reformatted,
+  WEIGHT_LOSS = list(
+    Row_Names = row.names(bubble_diet_df_reformatted),
+    Weight_Loss_Percentage = bubble_diet_df_reformatted$Weight_Loss,
+    Weight_Loss_Table = data.frame(
+      Subject = bubble_diet_df_reformatted$Subject,
+      Weight_Loss = bubble_diet_df_reformatted$Weight_Loss
+    )
+  ),
+  Message = "I enjoy manipulating data in R."
+)
+
+# View the resulting list
+BUBBLE_DIET
+```
