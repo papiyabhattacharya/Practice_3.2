@@ -7,10 +7,14 @@ output: html_document
 
 ---
 
-##  Step 1: Create the initial data frame
-```
-library(dplyr)
+Good. Don't forget the options of your code chunks for a better format and run your code
 
+
+##  Step 1: Create the initial data frame
+
+```{r, message=F, warning=F}
+library(dplyr)
+library(tidyr) # for pivot_longer
 
 subject_names <- c("Subject1", "Subject2", "Subject3", "Subject4", "Subject5")
 initial_weight <- c(104,95,87,77,112)
@@ -19,31 +23,35 @@ post_diet_weight <- c(96,91,81,75,118)
 bubble_diet_df <- data.frame(Subject = subject_names,
                              Before_Diet = initial_weight,
                              After_Diet = post_diet_weight)
+bubble_diet_df
 
 ```
 
 ## Step 2: Reformat the data frame
 
-```
+```{r}
 
 bubble_diet_df_reformatted <- bubble_diet_df %>%
   pivot_longer(cols = -Subject, 
                names_to = "Measurement_Time",
                values_to = "Weight")
 ```
+
 ## Step 3: Calculate weight loss as a percentage
-```
+
+```{r}
 bubble_diet_df_reformatted <- bubble_diet_df_reformatted %>%
   group_by(Subject) %>%
   mutate(Weight_Loss = ((Weight - min(Weight)) / min(Weight)) * 100) %>%
 ungroup()
+
+# your solution worked, but there was a more straightforward solution. But good use of the %>%.
+
 ```
 
 ## Step 4: Create the list as specified
-```
 
-
-
+```{r}
 BUBBLE_DIET <- list(
   Data_Frame = bubble_diet_df_reformatted,
   WEIGHT_LOSS = list(
